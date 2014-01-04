@@ -5,10 +5,7 @@ function gnjfader() {
     document.body.appendChild(styleTag);
 
     var CLASS_NAME = 'gnj-fader';
-    var DEFAULT_COLOR
-
     var nodes = document.querySelectorAll('*['+CLASS_NAME+']');
-
     var fadersCreated = 0;
 
     for (var i = 0; i < nodes.length; i++) {
@@ -24,7 +21,7 @@ function gnjfader() {
         var delayColor = 100;
         var delayTransform = 100;
 
-        var color = [];
+        var color = ['magenta','orange','yellow','#21EB95','#00B1FC'];
         var x = 0;
         var y = 0;
 
@@ -99,7 +96,7 @@ function gnjfader() {
         }
 
         n.classList.add(CLASS_NAME);
-        n.classList.add(className);
+        n.id = className;
 
         n.innerHTML = '';
         spans.forEach(function(s) {
@@ -109,9 +106,9 @@ function gnjfader() {
 
         var style = '';
 
-        var DEFAULT = '.'+className+' span';
-        var FADER_TRUE = '.'+className+'.fader-true span';
-        var HOVER = '.'+className+':hover span';
+        var DEFAULT = '#'+className+' span';
+        var FADER_TRUE = '#'+className+'.fader-true span';
+        var HOVER = '#'+className+':hover span';
 
         var selectors = [DEFAULT, FADER_TRUE];
 
@@ -130,7 +127,7 @@ function gnjfader() {
         style += '\n\t to { -webkit-transform: translate3d('+x+'px, '+y+'px, 0); }';
         style += ' }';
 
-        style += '\n\n.'+className+' {';
+        style += '\n\n#'+className+' {';
         style += '\n\tdisplay: inline-block;'
         style += ' }';
 
