@@ -5,7 +5,7 @@ function gnjfader() {
     document.body.appendChild(styleTag);
 
     var CLASS_NAME = 'gnj-fader';
-    var nodes = document.querySelectorAll('*['+CLASS_NAME+']');
+    var nodes = document.querySelectorAll('*['+CLASS_NAME+'=true]');
     var fadersCreated = 0;
 
     for (var i = 0; i < nodes.length; i++) {
@@ -13,8 +13,9 @@ function gnjfader() {
         var n = nodes.item(i);
         var className = CLASS_NAME+'-'+fadersCreated;
 
-        var when = n.getAttribute(CLASS_NAME);
-
+        var when = n.getAttribute(CLASS_NAME+'-on');
+        var prefix = n.getAttribute(CLASS_NAME+'-prefix') || '';
+        
         var durationColor = 1000;
         var durationTransform = 1000;
 
@@ -106,9 +107,9 @@ function gnjfader() {
 
         var style = '';
 
-        var DEFAULT = '#'+className+' span';
+        var DEFAULT = prefix+' #'+className+' span';
         var FADER_TRUE = '#'+className+'.fader-true span';
-        var HOVER = '#'+className+':hover span';
+        var HOVER = prefix+' #'+className+':hover span';
 
         var selectors = [DEFAULT, FADER_TRUE];
 
