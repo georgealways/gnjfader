@@ -11,10 +11,11 @@ function gnjfader() {
     for (var i = 0; i < nodes.length; i++) {
 
         var n = nodes.item(i);
+
         var className = CLASS_NAME+'-'+fadersCreated;
 
         var when = n.getAttribute(CLASS_NAME+'-on');
-        var prefix = n.getAttribute(CLASS_NAME+'-prefix') || '';
+        var scope = n.getAttribute(CLASS_NAME+'-scope') || '';
         
         var durationColor = 1000;
         var durationTransform = 1000;
@@ -81,7 +82,7 @@ function gnjfader() {
             y = yAttr;
         }
 
-        var t = n.innerText;
+        var t = n.innerHTML;
         var spans = [];
         for (var j = 0; j < t.length; j++) {
             var ch = t.charAt(j);
@@ -89,11 +90,11 @@ function gnjfader() {
             if (ch === ' ') {
                 span.innerHTML = '&nbsp;';
             } else { 
-                span.innerText = ch;
+                span.innerHTML = ch;
             }
             spans.push(span);
-            span.setAttribute('style', '-webkit-animation-delay: '+-delayColor*(t.length-j)+'ms, '+-delayTransform*(t.length-j)+'ms;');
-
+            span.setAttribute('style', 'animation-delay: '+-delayColor*(t.length-j)+'ms, '+-delayTransform*(t.length-j)+'ms; ' +
+                                       '-webkit-animation-delay: '+-delayColor*(t.length-j)+'ms, '+-delayTransform*(t.length-j)+'ms;');
         }
 
         n.classList.add(CLASS_NAME);
@@ -107,39 +108,44 @@ function gnjfader() {
 
         var style = '';
 
-        var DEFAULT = prefix+' #'+className+' span';
+        var DEFAULT = scope+' #'+className+' span';
         var FADER_TRUE = '#'+className+'.fader-true span';
-        var HOVER = prefix+' #'+className+':hover span';
+        var HOVER = scope+' #'+className+':hover span';
 
         var selectors = [DEFAULT, FADER_TRUE];
 
         if (when === 'off') selectors = [FADER_TRUE];
         if (when === 'hover') selectors = [HOVER, FADER_TRUE];
 
-        style += '\n\n@-webkit-keyframes '+className+'-color {';
-        color.forEach(function(c, i) {
-            var percent = Math.round(i / (color.length-1) * 100) + '%';
-            style += '\n\t'+percent+' { color: ' + c + '; }';
-        });
-        style += ' }';
+        function addStyle(prefix) {
+            style += '\n\n@'+prefix+'keyframes '+className+'-color {';
+            color.forEach(function(c, i) {
+                var percent = Math.round(i / (color.length-1) * 100) + '%';
+                style += '\n\t'+percent+' { color: ' + c + '; }';
+            });
+            style += ' }';
 
-        style += '\n\n@-webkit-keyframes '+className+'-transform {';
-        style += '\n\t from { -webkit-transform: translate3d(-'+x+'px, -'+y+'px, 0); }';
-        style += '\n\t to { -webkit-transform: translate3d('+x+'px, '+y+'px, 0); }';
-        style += ' }';
+            style += '\n\n@'+prefix+'keyframes '+className+'-transform {';
+            style += '\n\t from { '+prefix+'transform: translate3d(-'+x+'px, -'+y+'px, 0); }';
+            style += '\n\t to { '+prefix+'transform: translate3d('+x+'px, '+y+'px, 0); }';
+            style += ' }';
 
-        style += '\n\n#'+className+' {';
-        style += '\n\tdisplay: inline-block;'
-        style += ' }';
+            style += '\n\n#'+className+' {';
+            style += '\n\tdisplay: inline-block;'
+            style += ' }';
 
-        style += '\n\n'+selectors.join(', ')+' {';
-        style += '\n\tdisplay: inline-block;';
-        style += '\n\t-webkit-animation-name: '+className+'-color, '+className+'-transform;';
-        style += '\n\t-webkit-animation-duration: '+durationColor+'ms, '+durationTransform+'ms;';
-        style += '\n\t-webkit-animation-timing-function: linear, ease-in-out;';
-        style += '\n\t-webkit-animation-iteration-count: infinite;';
-        style += '\n\t-webkit-animation-direction: alternate;';
-        style += ' }';
+            style += '\n\n'+selectors.join(', ')+' {';
+            style += '\n\tdisplay: inline-block;';
+            style += '\n\t'+prefix+'animation-name: '+className+'-color, '+className+'-transform;';
+            style += '\n\t'+prefix+'animation-duration: '+durationColor+'ms, '+durationTransform+'ms;';
+            style += '\n\t'+prefix+'animation-timing-function: linear, ease-in-out;';
+            style += '\n\t'+prefix+'animation-iteration-count: infinite;';
+            style += '\n\t'+prefix+'animation-direction: alternate;';
+            style += ' }';
+        }
+
+        addStyle('');
+        addStyle('-webkit-');
 
         styleTag.appendChild(document.createTextNode(style));
 
