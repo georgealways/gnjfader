@@ -82,7 +82,7 @@ function gnjfader() {
             y = yAttr;
         }
 
-        var t = n.innerHTML;
+        var t = n.textContent;
         var spans = [];
         for (var j = 0; j < t.length; j++) {
             var ch = t.charAt(j);
